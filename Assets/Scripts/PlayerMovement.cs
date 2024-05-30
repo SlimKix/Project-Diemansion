@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();  
         animator = GetComponent<Animator>();
         attackDir = 0;
-
     }
 
     // Update is called once per frame
@@ -56,26 +55,25 @@ public class PlayerMovement : MonoBehaviour
 
         Attack();
 
-        if (movement.x == -1)
+        if (!currentAnimation.IsName("Attack")) 
         {
-            attackDir = 1;
-        }
-        if ( movement.y == 1)
-        {
-            attackDir = 2;
-        }
-        if(movement.x == 1)
-        {
-            attackDir = 3;
-        }
-        if (movement.y == -1)
-        {
-            attackDir = 0;
-        }
-
-        if (attackDir == 0)
-        {
-            //transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * -1, transform.localScale.z);
+            Debug.Log("true");
+            if (movement.x == -1)
+            {
+                attackDir = 1;
+            }
+            if (movement.y == 1)
+            {
+                attackDir = 2;
+            }
+            if (movement.x == 1)
+            {
+                attackDir = 3;
+            }
+            if (movement.y == -1)
+            {
+                attackDir = 0;
+            }
         }
 
         // Debug.Log(attack + "Attack");
