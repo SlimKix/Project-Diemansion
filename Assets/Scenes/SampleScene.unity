@@ -10705,9 +10705,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialMoveSpeed: 5
-  attackDir: 0
-  arrow: {fileID: 0}
-  fireRate: 5
+  attackDir: {x: 0, y: 0}
+  arrow: {fileID: 4273035927976734576, guid: 55b9e00f0e8efdc4ea1cc6399688abfc, type: 3}
+  fireRate: 1
 --- !u!50 &463075468
 Rigidbody2D:
   serializedVersion: 4

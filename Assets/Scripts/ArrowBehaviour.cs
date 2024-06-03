@@ -8,6 +8,7 @@ public class ArrowBehaviour : MonoBehaviour
 
     [SerializeField]
     float speed;
+    public Vector2 direction;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +22,14 @@ public class ArrowBehaviour : MonoBehaviour
         
     }
 
-    public void Move(Vector2 direction)
+    private void FixedUpdate()
     {
-        rb.MovePosition(direction * speed * Time.deltaTime);
+        rb.MovePosition(rb.position + direction/2);
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
+
+
 }

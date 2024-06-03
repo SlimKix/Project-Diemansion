@@ -47,6 +47,6 @@ public class EnemyBehaviour : MonoBehaviour
             rb.MovePosition(Vector2.MoveTowards(transform.position, playerRB.position, moveSpeed * Time.fixedDeltaTime));
             direction = playerRB.position - rb.position;
         } 
-        Debug.Log(direction);
+       // Debug.Log(direction);
     }
 }

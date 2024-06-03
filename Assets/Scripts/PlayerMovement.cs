@@ -13,13 +13,14 @@ public class PlayerMovement : MonoBehaviour
 {
 
     public float initialMoveSpeed;
-    public float attackDir;
+    public Vector2 attackDir;
     private float currentMoveSpeed;
 
     private Rigidbody2D rb;
     private Animator animator;
     public GameObject arrow;
-    List<GameObject> arrows;
+    private GameObject newArrow;
+    List<GameObject> arrowList = new List<GameObject>();
 
     public float fireRate;
     private float timeToFire;
@@ -34,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         currentMoveSpeed = initialMoveSpeed;
         rb = GetComponent<Rigidbody2D>();  
         animator = GetComponent<Animator>();
-        attackDir = 0;
+        attackDir = new Vector2(0,-1);
     }
 
     // Update is called once per frame
@@ -44,11 +45,11 @@ public class PlayerMovement : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
         attack = Input.GetAxisRaw("Fire1");
 
-
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
-        animator.SetFloat("AtkDir", attackDir);
+        animator.SetFloat("XAtkDir", attackDir.x);
+        animator.SetFloat("YAtkDir", attackDir.y);
         animator.SetFloat("Atk", attack);
 
         AnimatorStateInfo currentAnimation = animator.GetCurrentAnimatorStateInfo(0);
@@ -57,32 +58,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (!currentAnimation.IsName("Attack")) 
         {
-            Debug.Log("true");
-            if (movement.x == -1)
+          
+           if(movement != Vector2.zero)
             {
-                attackDir = 1;
+                attackDir = movement;
             }
-            if (movement.y == 1)
-            {
-                attackDir = 2;
-            }
-            if (movement.x == 1)
-            {
-                attackDir = 3;
-            }
-            if (movement.y == -1)
-            {
-                attackDir = 0;
-            }
+            Debug.Log(attackDir);
         }
-
-        // Debug.Log(attack + "Attack");
-        // Debug.Log(attackDir + "Attack direction");
-        // Debug.Log(movement + "Axis");
-        //Debug.Log(Time.time);
-        //arrow.GetComponent<Rigidbody2D>().MovePosition(new Vector2(0, 1 * Time.deltaTime));
-        // Debug.Log(rb.velocity);
-
 
         if (currentAnimation.IsName("Attack"))
         {
@@ -97,18 +79,45 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement.normalized * currentMoveSpeed * Time.fixedDeltaTime);
+       /* if (arrowList.Count > 0)
+        {
+            for (int i = 0; i < arrowList.Count; i++)
+            {
+                arrowList[i].GetComponent<Rigidbody2D>().MovePosition(newArrow.GetComponent<Rigidbody2D>().position + attackDir);
+            }
+        }*/
     }
 
     void Attack()
-    {   
-        if (attack > 0.01 && Time.time >= timeToFire) 
-        { 
-            Instantiate(arrow);
-/*            if (attackDir == 0)
+    {
+        if (attack > 0.01 && Time.time >= timeToFire)
+        {
+            newArrow = Instantiate(arrow);
+            arrowList.Add(newArrow);
+            newArrow.GetComponent<ArrowBehaviour>().direction = attackDir;
+
+            if (attackDir == new Vector2(0, -1))
             {
-            }*/
+                newArrow.GetComponentInParent<Rigidbody2D>().position = rb.position + new Vector2(0,-2);
+                newArrow.GetComponent<Rigidbody2D>().rotation = 180;
+            }
+            if (attackDir == new Vector2(-1, 0))
+            {
+                newArrow.GetComponentInParent<Rigidbody2D>().position = rb.position + new Vector2(-2, 0);
+                newArrow.GetComponent<Rigidbody2D>().rotation = 90;
+            }
+            if (attackDir == new Vector2(0, 1))
+            {
+                newArrow.GetComponentInParent<Rigidbody2D>().position = rb.position + new Vector2(0, 2);
+            }
+            if (attackDir == new Vector2(1, 0))
+            {
+                newArrow.GetComponentInParent<Rigidbody2D>().position = rb.position + new Vector2(2, 0);
+                newArrow.GetComponent<Rigidbody2D>().rotation = 270;
+            }
+
             timeToFire = Time.time + fireRate;
         }
-           // arrow.GetComponent<Rigidbody2D>().MovePosition(rb.position + new Vector2(0,-1) * 2f * Time.fixedDeltaTime);
+        //Debug.Log(timeToFire);
     }
 }
